@@ -25,16 +25,25 @@ app.get("/api/hello", function(req, res) {
 
 app.get("/api/timestamp/:date_string?", function(req, res) {
   var param = req.params.date_string;
+  var date = new Date(param);
   if (!param) {
     var date = new Date();
     res.json({ unix: date.getTime(), utc: date.toUTCString() });
   }
-  var date = new Date(param);
+  /*
   if (/^(\-|\+)?([0-9]+)$/.test(param))
     date = new Date(parseInt(param, 10) * 1000);
   if (isNaN(date.getTime())) {
-    res.json({ unix: null, utc: "Invalid Date" });
-  } else {
+    res.json({"error" : "Invalid Date" });
+  }
+  */
+  else if (date == 'Invalid Date') {
+    date = new Date(Number(param));
+  }
+  if (date == 'Invalid Date') {
+    res.json({error: "Invalid Date"});
+  }
+  else {
     res.json({ unix: date.getTime(), utc: date.toUTCString() });
   }
 });
